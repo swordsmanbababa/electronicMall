@@ -1,0 +1,429 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Document</title>
+  <link rel="stylesheet" type="text/css" href="../res/static/css/main.css">
+  <link rel="stylesheet" type="text/css" href="../res/layui/css/layui.css">
+  <script type="text/javascript" src="../res/layui/layui.js"></script>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=0">
+  <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1">
+  <style>
+  	.active{
+  		color:#ff0000!important;
+  	}
+  	.img img{
+  		width:280px;
+  	}
+  </style>
+</head>
+<body>
+
+  <div class="site-nav-bg">
+    <div class="site-nav w1200">
+      <p class="sn-back-home">
+        <i class="layui-icon layui-icon-home"></i>
+        <a href="#">首页</a>
+      </p>
+      <div class="sn-quick-menu">
+        <div class="login"><a href="login.html">我的</a></div>
+        <div class="sp-cart"><a href="shopcart.html">购物车</a><span>0</span></div>
+      </div>
+    </div>
+  </div>
+
+
+
+  <div class="header">
+    <div class="headerLayout w1200">
+      <div class="headerCon">
+        <h1 class="mallLogo">
+          <a href="#" title="母婴商城">
+            <img src="../res/static/img/logo.png">
+          </a>
+        </h1>
+        <div class="mallSearch">
+          <form action="" class="layui-form" novalidate>
+            <input type="text" name="title" required  lay-verify="required" autocomplete="off" class="layui-input" placeholder="请输入需要的商品">
+            <button class="layui-btn" lay-submit lay-filter="formDemo">
+                <i class="layui-icon layui-icon-search"></i>
+            </button>
+            <input type="hidden" name="" value="">
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+  <div class="content content-nav-base commodity-content">
+    <div class="main-nav">
+      <div class="inner-cont0">
+        <div class="inner-cont1 w1200">
+          <div class="inner-cont2">
+            <a href="commodity.html" class="active">所有商品</a>
+            <a href="buytoday.html">今日团购</a>
+            <a href="information.html">母婴资讯</a>
+            <a href="about.html">关于我们</a>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="commod-cont-wrap">
+      <div class="commod-cont w1200 layui-clear">
+        <div class="left-nav">
+          <div class="title">所有分类</div>
+          <div class="list-box"  id="list_top">
+            
+          </div>
+        </div>
+        <div class="right-cont-wrap">
+          <div class="right-cont">
+            <div class="sort layui-clear">
+              <a class="active" href="javascript:;" event = 'volume'>销量</a>
+              <a href="javascript:;" event = 'price'>价格</a>
+              <a href="javascript:;" event = 'newprod'>新品</a>
+              <a href="javascript:;" event = 'collection'>收藏</a>
+            </div>
+            <div class="prod-number">
+              <span></span>
+            </div>
+            <div class="cont-list layui-clear" id="list-cont">
+             
+            </div>
+            <!-- 模版引擎导入 -->
+            <!-- <script type="text/html" id="demo">
+              {{# layui.each(d.menu.milk.content,function(index,item){}}    
+                <div class="item">
+                  <div class="img">
+                    <a href="javascript:;"><img src="{{item.img}}"></a>
+                  </div>
+                  <div class="text">
+                    <p class="title"></p>
+                    <p class="price">
+                      <span class="pri">{{item.pri}}</span>
+                      <span class="nub">{{item.nub}}</span>
+                    </p>
+                  </div>
+                </div>
+              {{# }); }}
+            </script> -->
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  	<script type="text/javascript" src="../js/jquery-2.2.4.js"></script>
+	<script type="text/javascript" src="../js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="../js/layer.js"></script>
+    <script type="text/javascript" src="../js/mylayer.js"></script>
+    
+<script>
+var current_c_id = 1;
+var current_s_id = 1;
+var start = 0;  //分页从0开始
+var length = 6; //分页每页8条数据
+var loadingSwitch = true;
+$("form").submit(function(){
+	window.location.href ="search.html?search="+($(".layui-input").val());
+	window.event.returnValue=false
+/* 	window.location.href="search.html"; */
+})
+
+	
+	$(function(){
+		checkCartNumber();
+		getCategory();
+		//前面定义了当前请求的分类信息
+		loadingMoreProduct(current_c_id,current_s_id,start,length);
+		//开始监听屏幕的一个滚动事件
+		$(window).scroll(function(){
+			//文档的高度
+			var document_height = $(document).outerHeight();
+			//console.log("document:"+document_height);
+			//窗口的高度
+			var window_height = $(window).height();
+			//console.log("window:"+window_height);
+			//滚动的距离
+			var scroll_distance = $(document).scrollTop();
+			//console.log("滚动距离:"+scroll_distance);
+			//如果滚动到底部的时候   滚动的距离 + 窗口的高度  = 文档的高度
+			//设置滚动到距离 底部还剩余100像素的时候 开始加载数据
+			//这个地方 一直在监听  调用的次数非常多
+			if(document_height-window_height-scroll_distance<100){
+				if(loadingSwitch){
+					loadingSwitch = false;
+					console.log("下一页数据");
+					start+= length;
+					//发送请求 获取下一页的数据
+					loadingMoreProduct(current_c_id,current_s_id,start,length);
+				}
+			}
+		});
+	});
+function checkCartNumber(){
+	var cartListStr = localStorage.getItem("cartList");
+	if(cartListStr!=null&&cartListStr!="{}"){
+		cartList = JSON.parse(cartListStr);
+		var num = 0;
+		for(var obj in cartList){
+			num++;
+		}
+		$(".sp-cart").html("  <div class='sp-cart'><a href='shopcart.html'>购物车</a><span>"+num+"</span></div>");
+	}
+}
+	
+	//加载更多数据的
+	function loadingMoreProduct(cate_id,sc_id, start, length) {
+		//所有的数据 先走localstorage  判断一下当前是否存在数据  如果存在就 直接走本地的数据
+		//如果本地没有 表示是第一个点击  然后找服务器要数据
+		//只能存储 JSON字符串 到localstorage中
+		if(!window.localStorage){
+            alert("不支持缓存数据");
+        }else{
+        	console.log("data_"+cate_id+"_"+start);
+        	var cacheData = localStorage.getItem("data_"+cate_id+"_"+sc_id+"_"+start);
+        	if(cacheData==null){
+        		console.log("firstData");
+        		//第一次加载数据
+        		FirstLoadingData(cate_id,sc_id,start,length);
+        	}else{
+        		//非第一次加载数据  缓存里面有数据
+        		console.log("加载缓存:"+cate_id+"_"+start);
+        		//将缓存的数据显示到界面
+        		var data = JSON.parse(cacheData);
+        		if(data.retcode==="0"){
+        			var list = $("#list-cont");
+					for (var i = 0; i < data.data.length; i++) {
+						var product = data.data[i];
+						var item = $("<div class = 'item'>");
+						var img = $("<div class = 'img'>");
+						console.log("id"+product.pro_id);
+						var a = $("<a href='newdetails.html?pro_id="+product.pro_id+"'><img src = "+"'../images/"+product.pro_image+"'</a>");
+						img.append(a);
+						item.append(img);
+						var t = $("<div class ='text'>");
+						var p = $("<p class = 'title'>"+product.pro_name+"</p>");
+						var price = $("<p class = 'price'>");
+						var span = $("<span class = 'pri'>"+"￥:"+product.pro_price+"</span>");
+						t.append(p);
+						t.append(price);
+						price.append(span);
+						item.append(t);
+						list.append(item);
+					}
+					loadingSwitch=true;
+        		}else{
+        			$("#bottom").show();
+        		}
+        	}
+        }
+	}
+	
+	//第一次加载数据信息
+	function FirstLoadingData(cate_id,sc_id,start,length){
+		mylayer.showLoading("商品加载中");
+		$
+				.ajax({
+					type : "GET",
+					//添加参数进行分页  查询
+					url : "../getProductByCateId",
+					data : {
+						c_id : cate_id,
+						sc_id : sc_id,
+						start : start,
+						length : length
+					},
+					dataType : "json",
+					success : function(data) {
+						mylayer.closeLoading();
+						//填充数据到界面
+						console.log(data);
+						localStorage.setItem("data_"+cate_id+"_"+sc_id+"_"+start,JSON.stringify(data))
+						if (data.retcode === "0") {
+							var list = $("#list-cont");
+							for (var i = 0; i < data.data.length; i++) {
+								var product = data.data[i];
+								var item = $("<div class = 'item'>");
+								var img = $("<div class = 'img'>");
+								var a = $("<a href='newdetails.html?pro_id="+product.pro_id+"'><img src = "+"'../images/"+product.pro_image+"'</a>");
+								img.append(a);
+								item.append(img);
+								var t = $("<div class ='text'>");
+								var p = $("<p class = 'title'>"+product.pro_name+"</p>");
+								var price = $("<p class = 'price'>");
+								var span = $("<span class = 'pri'>"+"￥:"+product.pro_price+"</span>");
+								t.append(p);
+								t.append(price);
+								price.append(span);
+								item.append(t);
+								list.append(item);
+								
+							}
+							
+							loadingSwitch = true;
+						} else {
+							$("#bottom").show();
+							//显示有底线的
+							//mylayer.showError(data.data);
+						}
+					},
+					error : function(xhr, error, status) {
+						console.log(error);
+						//alert(error);
+						mylayer.showError(data.data);
+					}
+				})
+	}
+	
+	function getQueryString(name) { 
+	    var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)", "i"); 
+	    var r = window.location.search.substr(1).match(reg); 
+	    if (r != null) return unescape(r[2]); 
+	    return null; 
+	}
+	function getProductByCateId(cate_id,sc_id,obj) {
+		console.log(cate_id);  //数值
+		//console.log($(obj).attr("id"));//字符串
+		if(current_c_id!=cate_id || sc_id!=current_s_id){
+			current_c_id = cate_id;
+			current_s_id = sc_id;
+			//需要加载数据
+			//去掉之前的active的css
+			$("a.active").removeClass("active");
+			//当前选中的li处于active
+			if (obj != null) {
+				$(obj).addClass("active");
+		    }
+			//loading 告诉客户在加载数据信息
+			var content = $("#list-cont");
+			content.empty();
+			start = 0;
+			loadingMoreProduct(current_c_id,sc_id,start,length);
+		}else{
+			console.log("你点击的是相同的分类")
+		}			
+	}
+
+
+	function getCategory(){
+			$.ajax({
+				type:"GET",
+				url:"../getCategory",
+				dataType:'json',
+				success:function(data){
+					if (data.retcode === "0") {
+					var div=$("#list_top");
+					for (var i = 0; i < data.data.length; i++) {
+						var cate = data.data[i];
+						
+						var dl = $("<dl id=f_id"+cate.c_id+">");
+						var dt = $("<dt>"+cate.c_name+"</dt>");
+						dl.append(dt);
+						getSecondCategory(cate.c_id);
+						div.append(dl);
+						
+					}
+				} else {
+					//alert(data.data);
+					mylayer.showError(data.data);
+				}
+			},
+			error : function(xhr, error, status) {
+				console.log(error);
+				mylayer.showError(error);
+			}
+			});
+			
+		}
+		
+		function getSecondCategory(f_id){
+			$.ajax({
+				type:"GET",
+				url:"../getSecondCategory",
+				dataType:'json',
+				data:{
+					f_id:f_id
+				},
+				success:function(data){
+					if (data.retcode === "0") {				
+						var dl=$("#f_id"+f_id);
+					for (var i = 0; i < data.data.length; i++) {
+						var cate = data.data[i];
+					    var aElement = $("<a id='"+cate.c_id+"' href='javascript:void(0)' onclick='getProductByCateId("
+					    		+ f_id
+					    		+","
+					    		+ cate.c_id
+								+ ",this)'>"
+								+ cate.c_name + "</a>");
+						
+						var dd=$("<dd>");
+						dd.append(aElement);
+						dl.append(dd);	
+						if(f_id=="1"&&cate.c_id=="1")
+							aElement
+							.addClass("active");
+					}
+					
+					
+				} else {
+					mylayer.showError(data.data);
+				}
+			},
+			error : function(xhr, error, status) {
+				console.log(error);
+				mylayer.showError(error);
+			}
+			});
+		}
+		
+  layui.config({
+    base: '../res/static/js/util/' //你存放新模块的目录，注意，不是layui的模块目录
+  }).use(['mm','laypage','jquery'],function(){
+      var laypage = layui.laypage,$ = layui.$,
+     mm = layui.mm;
+       laypage.render({
+        elem: 'demo0'
+        ,count: 100 //数据总数
+      });
+
+
+    // 模版引擎导入
+    //  var html = demo.innerHTML;
+    //  var listCont = document.getElementById('list-cont');
+    //  // console.log(layui.router("#/about.html"))
+    // mm.request({
+    //     url: '../json/commodity.json',
+    //     success : function(res){
+    //       console.log(res)
+    //       listCont.innerHTML = mm.renderHtml(html,res)
+    //     },
+    //     error: function(res){
+    //       console.log(res);
+    //     }
+    //   })
+
+    $('.sort a').on('click',function(){
+      $(this).addClass('active').siblings().removeClass('active');
+    })
+    $('.list-box dt').on('click',function(){
+      if($(this).attr('off')){
+        $(this).removeClass('active').siblings('dd').show()
+        $(this).attr('off','')
+      }else{
+        $(this).addClass('active').siblings('dd').hide()
+        $(this).attr('off',true)
+      }
+    })
+	function getQueryString(name) { 
+        var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)", "i"); 
+        var r = window.location.search.substr(1).match(reg); 
+        if (r != null) return unescape(r[2]); 
+        return null; 
+    }
+});
+</script>
+
+
+</body>
+</html>

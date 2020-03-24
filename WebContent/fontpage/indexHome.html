@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>我的电商网站主页</title>
+<link href="../css/bootstrap.min.css" rel="stylesheet">
+<style type="text/css">
+.container {
+	width: 1000px;
+}
+
+.row {
+	text-align: center;
+}
+.carousel-inner .item img {
+	/* width:100%; */
+	height:300px;
+}
+#content{
+	margin-top:15px;
+}
+</style>
+</head>
+<body>
+	<div class="container">
+		<h1 align="center">我的电商主页</h1>
+		<!-- 页面的布局的  采用九宫格的方式进行 -->
+		<nav class="navbar navbar-default">
+			<div class="container-fluid">
+				<!-- Collect the nav links, forms, and other content for toggling -->
+				<div class="collapse navbar-collapse"
+					id="bs-example-navbar-collapse-1">
+					<ul class="nav navbar-nav" id="category">
+					</ul>
+					<ul class="nav navbar-nav navbar-right"
+						style="margin-left: 10px; line-height: 50px">
+						<li class="active" style="margin-right: 10px;">
+							<button href="#" class="btn btn-info">
+								登录 <span class="sr-only">(current)</span>
+							</button>
+						</li>
+						<li><button href="#" class="btn btn-info" style="margin-right: 10px;">注册</button></li>
+						<li><button id="adminBtn" class="btn btn-info">后台</button></li>
+					</ul>
+					<form class="navbar-form navbar-right">
+						<div class="form-group">
+							<input type="text" id="search" class="form-control" placeholder="请输入查询内容">
+						</div>
+						<button type="submit" id="submitBtn" class="btn btn-default">搜索</button>
+					</form>
+				</div>
+				<!-- /.navbar-collapse -->
+			</div>
+			<!-- /.container-fluid -->
+		</nav>
+
+		<div id="carousel-example-generic" class="carousel slide"
+			data-ride="carousel">
+			<!-- Indicators -->
+			<ol class="carousel-indicators">
+				<li data-target="#carousel-example-generic" data-slide-to="0"
+					class="active"></li>
+				<li data-target="#carousel-example-generic" data-slide-to="1"></li>
+				<li data-target="#carousel-example-generic" data-slide-to="2"></li>
+			</ol>
+			<!-- Wrapper for slides -->
+			<div class="carousel-inner" role="listbox">
+				<div class="item active">
+				    <div style="text-align:center">
+				    	<img src="../images/roll/top1.jpg" alt="">
+						<div class="carousel-caption">标题1</div>
+				    </div>
+				</div>
+				<div class="item">
+					<div style="text-align:center">
+						<img src="../images/roll/top2.jpg" alt="">
+						<div class="carousel-caption">标题2</div>
+					</div>
+				</div>
+				<div class="item">
+					<div style="text-align:center">
+						<img src="../images/roll/top3.jpg" alt="">
+						<div class="carousel-caption">标题3</div>
+					</div>
+				</div>
+			</div>
+			<!-- Controls -->
+			<a class="left carousel-control" href="#carousel-example-generic"
+				role="button" data-slide="prev"> <span
+				class="glyphicon glyphicon-chevron-left" aria-hidden="true"></span>
+				<span class="sr-only">Previous</span>
+			</a> <a class="right carousel-control" href="#carousel-example-generic"
+				role="button" data-slide="next"> <span
+				class="glyphicon glyphicon-chevron-right" aria-hidden="true"></span>
+				<span class="sr-only">Next</span>
+			</a>
+		</div>
+		<div class="row" id="content"></div>
+		<div class="row" id="bottom" style="display:none;color:red">
+			<h2 align="center">我是有底线的</h2>
+		</div>
+	</div>
+	<script type="text/javascript" src="../js/jquery-2.2.4.js"></script>
+	<script type="text/javascript" src="../js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="../js/layer.js"></script>
+    <script type="text/javascript" src="../js/mylayer.js"></script>
+	<script type="text/javascript">
+	    $("#adminBtn").click(function(){
+	    	window.location.href = "../admin/loginThirdCode.html";
+	    })
+		//实现搜索功能
+		$("form").submit(function(){
+			if($("#search").val()!=""){
+				window.location.href = "search.html?search="+($("#search").val());
+			}else{
+				mylayer.showError("请输入查询内容");
+			}
+			return false;
+		})
+	    //分页的参数
+		var start = 0;  //分页从0开始
+		var length = 8; //分页每页8条数据
+		var loadingSwitch = true;
+		
+		//自己写一个接口  携带 分类和商品对应的所有的数据信息
+		//默认请求分类为1的数据信息  点击后分类的id会发生变化
+		var current_c_id = 1;
+		//发送请求 获取数据信息 
+		//jquery加载完毕后调用的第一个方法
+		$(function() {
+			getCategory();
+			//前面定义了当前请求的分类信息
+			loadingMoreProduct(current_c_id,start,length);
+			//开始监听屏幕的一个滚动事件
+			$(window).scroll(function(){
+				//文档的高度
+				var document_height = $(document).outerHeight();
+				//console.log("document:"+document_height);
+				//窗口的高度
+				var window_height = $(window).height();
+				//console.log("window:"+window_height);
+				//滚动的距离
+				var scroll_distance = $(document).scrollTop();
+				//console.log("滚动距离:"+scroll_distance);
+				//如果滚动到底部的时候   滚动的距离 + 窗口的高度  = 文档的高度
+				//设置滚动到距离 底部还剩余100像素的时候 开始加载数据
+				//这个地方 一直在监听  调用的次数非常多
+				if(document_height-window_height-scroll_distance<100){
+					if(loadingSwitch){
+						loadingSwitch = false;
+						console.log("下一页数据");
+						start+= length;
+						//发送请求 获取下一页的数据
+						loadingMoreProduct(current_c_id,start,length);
+					}
+				}
+			});
+		});
+		
+		function getCategory(){
+			//mylayer.showLoading("分类加载中");
+			//请求所有的导航栏的信息
+			$.ajax({
+						type : "GET",
+						url : "../getCategory",
+						dataType : "json",
+						success : function(data) {
+							console.log(data);
+							//mylayer.closeLoading();
+							if (data.retcode === "0") {
+								var ul = $("#category");
+								for (var i = 0; i < data.data.length; i++) {
+									var cate = data.data[i];
+									var aElement = $("<a id='"+cate.c_id+"' href='javascript:void(0)' onclick='getProductByCateId("
+											+ cate.c_id
+											+ ",this)'>"
+											+ cate.c_name + "</a>");
+									var li = null;
+									if (i == 0) {
+										li = $("<li class='active'>");
+									} else {
+										li = $("<li>");
+									}
+									li.append(aElement);
+									ul.append(li);
+								}
+							} else {
+								//alert(data.data);
+								mylayer.showError(data.data);
+							}
+						},
+						error : function(xhr, error, status) {
+							console.log(error);
+							mylayer.showError(error);
+						}
+					});
+		}
+
+		function getProductByCateId(cate_id,obj) {
+			console.log(cate_id);  //数值
+			//console.log($(obj).attr("id"));//字符串
+			if(current_c_id!=cate_id){
+				current_c_id = cate_id
+				//需要加载数据
+				//去掉之前的active的css
+				$("li.active").removeClass("active");
+				//当前选中的li处于active
+				if (obj != null) {
+					$(obj).parent().addClass("active");
+			    }
+				//loading 告诉客户在加载数据信息
+				var content = $("#content");
+				content.empty();
+				start = 0;
+				//隐藏 我是有底线的信息
+				$("#bottom").hide();
+				loadingMoreProduct(current_c_id,start,length);
+			}else{
+				console.log("你点击的是相同的分类")
+			}			
+		}
+
+		//加载更多数据的
+		function loadingMoreProduct(cate_id, start, length) {
+			//所有的数据 先走localstorage  判断一下当前是否存在数据  如果存在就 直接走本地的数据
+			//如果本地没有 表示是第一个点击  然后找服务器要数据
+			//只能存储 JSON字符串 到localstorage中
+			if(!window.localStorage){
+	            alert("不支持缓存数据");
+	        }else{
+	        	console.log("data_"+cate_id+"_"+start);
+	        	var cacheData = localStorage.getItem("data_"+cate_id+"_"+start);
+	        	if(cacheData==null){
+	        		console.log("firstData");
+	        		//第一次加载数据
+	        		FirstLoadingData(cate_id,start,length);
+	        	}else{
+	        		//非第一次加载数据  缓存里面有数据
+	        		console.log("加载缓存:"+cate_id+"_"+start);
+	        		//将缓存的数据显示到界面
+	        		var data = JSON.parse(cacheData);
+	        		if(data.retcode==="0"){
+	        			var content = $("#content");
+						for (var i = 0; i < data.data.length; i++) {
+							var product = data.data[i];
+							var img = $("<img src='../images/"+product.pro_image+"'/ style='width:180px;height:270px'>");
+							var h4 = $("<h4 style='height:38px;line-height:22px'>"
+									+ product.pro_name + "</h4>");
+							var price = $("<p >¥:" + product.pro_price
+									+ "</p>");
+							var div = $("<div class='col-md-3'>");
+							div.append(img);
+							div.append(h4);
+							div.append(price);
+							content.append(div);
+						}
+						loadingSwitch=true;
+	        		}else{
+	        			$("#bottom").show();
+	        		}
+	        	}
+	        }
+		}
+		
+		//第一次加载数据信息
+		function FirstLoadingData(cate_id,start,length){
+			mylayer.showLoading("商品加载中");
+			$
+					.ajax({
+						type : "GET",
+						//添加参数进行分页  查询
+						url : "../getProductByCateId",
+						data : {
+							c_id : cate_id,
+							start : start,
+							length : length
+						},
+						dataType : "json",
+						success : function(data) {
+							mylayer.closeLoading();
+							//填充数据到界面
+							console.log(data);
+							localStorage.setItem("data_"+cate_id+"_"+start,JSON.stringify(data))
+							if (data.retcode === "0") {
+								var content = $("#content");
+								for (var i = 0; i < data.data.length; i++) {
+									var product = data.data[i];
+									var img = $("<img src='../images/"+product.pro_image+"'/ style='width:180px;height:270px'>");
+									var h4 = $("<h4 style='height:38px;line-height:22px'>"
+											+ product.pro_name + "</h4>");
+									var price = $("<p >¥:" + product.pro_price
+											+ "</p>");
+									var div = $("<div class='col-md-3'>");
+									div.append(img);
+									div.append(h4);
+									div.append(price);
+									content.append(div);
+								}
+								loadingSwitch = true;
+							} else {
+								$("#bottom").show();
+								//显示有底线的
+								//mylayer.showError(data.data);
+							}
+						},
+						error : function(xhr, error, status) {
+							console.log(error);
+							//alert(error);
+							mylayer.showError(data.data);
+						}
+					})
+		}
+	</script>
+</body>
+</html>

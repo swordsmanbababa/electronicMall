@@ -1,0 +1,400 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Document</title>
+  <link rel="stylesheet" type="text/css" href="../res/static/css/main.css">
+  <link rel="stylesheet" type="text/css" href="../res/layui/css/layui.css">
+  <script type="text/javascript" src="../res/layui/layui.js"></script>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=0">
+  <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1">
+  <style>
+    .user{
+      margin: 0 auto;
+      width: 1200px;
+      margin-bottom: 20px;
+      padding-left: 10px;
+      font-size: 15px;
+    }
+    .user p{
+      margin-bottom: 10px;
+    }
+    .user p:nth-child(1),p:nth-child(2){
+      float: left;
+      margin-right: 40px;
+    }
+    .user .item{
+      font-weight: bold;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="site-nav-bg">
+    <div class="site-nav w1200">
+      <p class="sn-back-home">
+        <i class="layui-icon layui-icon-home"></i>
+        <a href="#">首页</a>
+      </p>
+      <div class="sn-quick-menu">
+        <div class="login"><a href="login.html">我的</a></div>
+        <div class="sp-cart"><a href="shopcart.html">购物车</a><span>0</span></div>
+      </div>
+    </div>
+  </div>
+
+
+
+  <div class="header">
+    <div class="headerLayout w1200">
+      <div class="headerCon">
+        <h1 class="mallLogo">
+          <a href="#" title="母婴商城">
+            <img src="../res/static/img/logo.png">
+          </a>
+        </h1>
+        <div class="mallSearch">
+          <form action="" class="layui-form" novalidate>
+            <input type="text" name="title" required  lay-verify="required" autocomplete="off" class="layui-input" placeholder="请输入需要的商品">
+            <button class="layui-btn" lay-submit lay-filter="formDemo">
+                <i class="layui-icon layui-icon-search"></i>
+            </button>
+            <input type="hidden" name="" value="">
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+  <div class="content content-nav-base shopcart-content">
+    <div class="main-nav">
+      <div class="inner-cont0">
+        <div class="inner-cont1 w1200">
+          <div class="inner-cont2">
+            <a href="commodity.html" class="active">所有商品</a>
+            <a href="buytoday.html">今日团购</a>
+            <a href="information.html">母婴资讯</a>
+            <a href="about.html">关于我们</a>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="banner-bg w1200">
+      <h3>夏季清仓</h3>
+      <p>宝宝被子、宝宝衣服3折起</p>
+    </div>
+    <div class="user">
+      <p>
+        <span class="item">姓名:</span>
+        <span id="o_name"></span>
+      </p>
+      <p>
+        <span class="item">电话号码：</span>
+        <span id="o_tel"></span>
+      </p>
+      <p>
+        <span class="item">收货地址：</span>
+        <span id="o_address"></span>
+      </p>
+    </div>
+    <div class="cart w1200">
+      <div class="cart-table-th">
+        <div class="th th-chk">
+          <div class="select-all">
+            <div class="cart-checkbox">
+              <input class="check-all check" id="allCheckked" type="checkbox" value="true">
+            </div>
+          <label>&nbsp;&nbsp;全选</label>
+          </div>
+        </div>
+        <div class="th th-item">
+          <div class="th-inner">
+            商品
+          </div>
+        </div>
+        <div class="th th-price">
+          <div class="th-inner">
+            单价
+          </div>
+        </div>
+        <div class="th th-amount">
+          <div class="th-inner">
+            数量
+          </div>
+        </div>
+        <div class="th th-sum">
+          <div class="th-inner">
+            小计
+          </div>
+        </div>
+        <div class="th th-op">
+          <div class="th-inner">
+            操作
+          </div>
+        </div>  
+      </div>
+      <div class="OrderList">
+        <div class="order-content" id="list-cont">
+        </div>
+      </div>
+
+
+      <!-- 模版导入数据 -->
+      <!-- <script type="text/html" id="demo">
+        {{# layui.each(d.infoList,function(index,item){}}
+          <ul class="item-content layui-clear">
+            <li class="th th-chk">
+              <div class="select-all">
+                <div class="cart-checkbox">
+                  <input class="CheckBoxShop check" id="" type="checkbox" num="all" name="select-all" value="true">
+                </div>
+              </div>
+            </li>
+            <li class="th th-item">
+              <div class="item-cont">
+                <a href="javascript:;"><img src="../res/static/img/paging_img1.jpg" alt=""></a>
+                <div class="text">
+                  <div class="title">宝宝T恤棉质小衫</div>
+                  <p><span>粉色</span>  <span>130</span>cm</p>
+                </div>
+              </div>
+            </li>
+            <li class="th th-price">
+              <span class="th-su">189.00</span>
+            </li>
+            <li class="th th-amount">
+              <div class="box-btn layui-clear">
+                <div class="less layui-btn">-</div>
+                <input class="Quantity-input" type="" name="" value="1" disabled="disabled">
+                <div class="add layui-btn">+</div>
+              </div>
+            </li>
+            <li class="th th-sum">
+              <span class="sum">189.00</span>
+            </li>
+            <li class="th th-op">
+              <span class="dele-btn">删除</span>
+            </li>
+          </ul>
+        {{# });}}
+      </script> -->
+
+
+      <div class="FloatBarHolder layui-clear">
+        <div class="th th-chk">
+          <div class="select-all">
+            <div class="cart-checkbox">
+              <input class="check-all check" id="" name="select-all" type="checkbox"  value="true">
+            </div>
+            <label>&nbsp;&nbsp;已选<span class="Selected-pieces">0</span>件</label>
+          </div>
+        </div>
+        <div class="th batch-deletion">
+          <span class="batch-dele-btn">批量删除</span>
+        </div>
+        <div class="th Settlement">
+          <button class="layui-btn" id='submitOrder'>结算</button>
+        </div>
+        <div class="th total">
+          <p>应付：<span class="pieces-total">0</span></p>
+        </div>
+      </div>
+    </div>
+  </div>
+<script type="text/javascript" src="../js/jquery-2.2.4.js"></script>
+<script type="text/javascript" src="../js/mylayer.js"></script>
+<script type="text/javascript" src="../js/layer.js"></script>
+<script type="text/javascript" src="../js/cookie.js"></script>
+<script type="text/javascript">
+var cartListStr=localStorage.getItem("cartList");
+var selectCartList=JSON.parse(cartListStr);
+var infoStr=localStorage.getItem("info");
+var info=JSON.parse(infoStr);
+$(function(){
+	checkCartNumber();
+	loadCart();
+	getAddress();
+});
+
+function getAddress(){
+	if(info!=null&&info!="{}"){
+		$("#o_name").html(info.o_name);
+		$("#o_tel").html(info.o_tel);
+		$("#o_address").html(info.o_address);
+	}
+}
+function stripscript(s) {
+    var pattern = new RegExp("[`~!@#$^&*()=|{}':;',\\[\\]<>/?~！@#￥……&*（）&mdash;—|{}【】‘；：”“'。，、？]")
+        var rs = "";
+    for (var i = 0; i < s.length; i++) {
+        rs = rs + s.substr(i, 1).replace(pattern, '');
+    }
+    return rs;
+}
+//绑定下单 的事件
+$("#submitOrder").click(function(){
+	if(info==null||info=="{}"){
+		alert("请输入收货地址");
+		window.location.href="home.html";
+		return;
+	}	
+	//实现loading
+	mylayer.showLoading();
+	var price = $(".pieces-total").html();
+	var total = stripscript(price);
+	$.ajax({
+		type:"POST",
+		url:"../submitOrder",
+		contentType: "application/json; charset=utf-8",
+		data:JSON.stringify({
+			//生成订单号的
+			u_id:cookie.get("userid"),
+			o_address:info.o_address,
+	        o_name:info.o_name,
+	        o_tel:info.o_tel,
+	        o_total:total,
+	        //购物车的数据  是用来生成订单项的  
+	        selectCartList:selectCartList
+		}),
+		success:function(data){
+			mylayer.closeLoading();
+			var order = JSON.parse(data);
+			if(order.retcode=="0"){
+				mylayer.showCallBackMessage("订单提交成功，跳转支付页面",function(){
+					//要在跳页面之前写好逻辑   跳转之后就失效了
+					var cartListStr = localStorage.getItem("cartList");
+					var cartList = JSON.parse(cartListStr);
+					for(var key in cartList){
+						if(selectCartList[key]!=undefined){
+							delete cartList[key];
+						}
+					}
+					localStorage.setItem("cartList",JSON.stringify(cartList));
+					//跳转到支付页面进行付款的
+					window.location.href = "pay.html?o_id="+order.data;
+					//清空对应的购物车选项
+					//selectCartList
+				});
+			}else{
+				mylayer.showError(data.data);
+			}
+		},
+		error:function(xhr,error,status){
+			mylayer.closeLoading();
+			mylayer.showError(error);
+		}
+	});
+});
+function loadCart(){
+	
+	if(cartListStr!=null&&cartListStr!="{}"){
+		
+		console.log(cartList);
+		for(var key in cartList){
+			var item=cartList[key];
+			var ul = $("<ul class = 'item-content layui-clear'>");
+			var li = $("<li class='th th-chk'>");
+			
+			var sel = $("<div class='select-all'>");
+			var cart = $("<div class=\"cart-checkbox\">");
+			var input = $("<input class=\"CheckBoxShop check\" id=\"\" type=\"checkbox\" num=\"all\" name=\"select-all\" value=\"true\">");
+			cart.append(input);
+			sel.append(cart);
+			li.append(sel);
+			ul.append(li); 
+			
+			 
+			var li2 = $("<li class=\"th th-item\">");
+			var itemcont = $("<div class=\"item-cont\">");
+			var a = $("<a href=\"javascript:;\">");
+		    var img = $("<img src='/day08Project/images/"+item.pro_image+"'>"); 
+			a.append(img); 
+			
+			var text = $("<div class=\"text\">");
+			var title = $("<div class=\"title\">"+item.pro_name+"</div>");
+			text.append(title);
+			itemcont.append(a);
+			itemcont.append(text);
+			li2.append(itemcont);
+			ul.append(li2);
+			
+			var price = $("<li class=\"th th-price\">");
+			var prispan = $("<span class='th-su'>"+item.pro_price+"</span>");
+			price.append(prispan);
+			ul.append(price);
+			
+			var thamount = $("<li class=\"th th-amount\">");			
+			var box = $("<div class=\"box-btn layui-clear\">");	
+			var less = $("<div class=\"less layui-btn\">-</div>");
+			var qua = $("<input class=\"Quantity-input\" type=\"\" name=\"\" value=\""+item.pro_num+"\" disabled=\"disabled\">");			
+			var add = $("<div class=\"add layui-btn\">+</div>");
+			thamount.append(box);
+			box.append(less);
+			box.append(qua);
+			box.append(add);
+			ul.append(thamount);
+			
+			var li3=$("<li class=\"th th-sum\">");
+			var spn3=$("<span class=\"sum\">"+item.pro_price*item.pro_num+"</span>");
+			li3.append(spn3);
+			ul.append(li3);
+			
+			var li4=$("<li class=\"th th-op\">");
+			var spn4=$("<span class=\"dele-btn\" onclick='deleteProduct("+item.pro_id+",this)'>删除</span>");
+			li4.append(spn4);
+			ul.append(li4);
+			
+			$("#list-cont").append(ul);
+		}
+	}
+}
+
+function deleteProduct(pro_id,obj){
+	if(confirm("是否要删除该商品")){
+		   delete cartList[pro_id];
+		   //更新数据 更新界面
+		   localStorage.setItem("cartList",JSON.stringify(cartList));
+		   //updateCart(); 
+		   $(obj).parent().parent().remove();
+	}
+}
+
+function checkCartNumber(){
+	var cartListStr = localStorage.getItem("cartList");
+	if(cartListStr!=null&&cartListStr!="{}"){
+		cartList = JSON.parse(cartListStr);
+		var num = 0;
+		for(var obj in cartList){
+			num++;
+		}
+		$(".sp-cart").html("  <div class='sp-cart'><a href='shopcart.html'>购物车</a><span>"+num+"</span></div>");
+	}
+}
+  layui.config({
+    base: '../res/static/js/util/' //你存放新模块的目录，注意，不是layui的模块目录
+  }).use(['mm','jquery','element','car'],function(){
+    var mm = layui.mm,$ = layui.$,element = layui.element,car = layui.car;
+    
+    // 模版导入数据
+    // var html = demo.innerHTML,
+    // listCont = document.getElementById('list-cont');
+    // mm.request({
+    //   url: '../json/shopcart.json',
+    //   success : function(res){
+    //     listCont.innerHTML = mm.renderHtml(html,res)
+    //     element.render();
+    //     car.init()
+    //   },
+    //   error: function(res){
+    //     console.log(res);
+    //   }
+    // })
+    // 
+    car.init()
+
+
+});
+</script>
+</body>
+</html>

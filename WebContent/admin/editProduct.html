@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+<link href="./css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+	<div class="container" style="width:600px">
+		<h1 align="center">商品编辑页面</h1>
+		<div class="text-right">
+			<a class="btn btn-default" href="indexAjaxTable.html">返回</a>
+		</div>
+		<div>
+			<form>
+			  <div class="form-group">
+			    <label for="pro_name">商品id</label>
+			    <input type="text" class="form-control" id="pro_id" readonly required placeholder="输入商品名称">
+			  </div>
+			  <div class="form-group">
+			    <label for="pro_name">商品名称</label>
+			    <input type="text" class="form-control" id="pro_name" required placeholder="输入商品名称">
+			  </div>
+			  <div class="form-group">
+			    <label for="pro_price">商品价格</label>
+			    <input type="text" class="form-control" id="pro_price" required placeholder="输入商品价格">
+			  </div>
+			  <div class="form-group">
+			    <label for="pro_price">添加日期</label>
+			    <input type="datetime-local" class="form-control" required id="pro_create">
+			  </div>
+			  <div class="form-group">
+			    <label for="pro_desc">商品描述</label><br>
+			    <textarea id="pro_desc" required rows="5"></textarea>
+			  </div>
+			  <button type="submit" id="btnSubmit" class="btn btn-default">提交</button>
+			</form>
+		</div>
+	</div>
+	<script type="text/javascript" src="./js/jquery-2.2.4.js">
+	</script>
+	<script type="text/javascript" src="./js/layer.js"></script>
+	<script type="text/javascript" src="./js/mylayer.js"></script>
+	<script type="text/javascript">
+		//需要通过JS获取 查询的商品id的参数信息  然后发请求到服务器  获取该商品信息
+		function GetQueryString(name) {
+			//定义一个正则表达式
+		     var reg = new RegExp("(^|&)"+ name +"=([^&]*)(&|$)");
+			 //获取浏览器的地址 然后匹配 正则表达式
+		     var r = window.location.search.substr(1).match(reg);
+			 //将匹配到的结果返回
+		     if(r!=null)return  unescape(r[2]); return null;
+		}
+		//console.log(GetQueryString("pro_id"));
+		var pro_id = GetQueryString("pro_id");
+		//发送Ajax请求  获取数据填充到界面
+		$.ajax({
+			type:"GET",
+			url:"queryProductByIdJSON",
+			data:"pro_id="+pro_id,
+			dataType:"json",
+			success:function(data){
+				console.log(data);
+				if(data.retcode==="0"){
+					$("#pro_id").val(data.data.pro_id);
+					$("#pro_name").val(data.data.pro_name);
+					$("#pro_price").val(data.data.pro_price);
+					$("#pro_desc").val(data.data.pro_desc);
+					var tempTime = data.data.pro_create;
+					var resultTime = tempTime.substring(0,tempTime.length-3);
+					//时间格式可以  前台修改  也可以后台修改 时间格式
+					resultTime = resultTime.replace(" ","T");
+					//console.log(resultTime);
+					$("#pro_create").val(resultTime);
+				}else {
+					mylayer.showError("商品信息不存在");
+				}
+			},
+			error:function(xhr,status,error){
+				mylayer.showError(status);
+			}
+		});
+		
+		
+		//监听按钮的点击事件  提交数据到数据库中 提示 修改成功
+		$("form").submit(function(){
+			//验证表单数据的正确性
+			//添加loading   登录中.... 转圈的   为什么会有 因为网络是不确定的  
+			//有时候会卡 如果不给用户任何的提示
+			mylayer.showLoading("玩命加载中...");
+			//修改时间格式 为方便java使用   
+			var tempTime = $("#pro_create").val();
+			console.log(tempTime);
+			var resultTime = tempTime.replace("T"," ");
+			//时间格式可以  前台修改  也可以后台修改 时间格式
+			var resultTime = resultTime+":00";
+			console.log(resultTime);
+			$.ajax({
+				type:"POST",
+				url:"updateProductJSON",
+				data:{
+					pro_id:$("#pro_id").val(),
+					pro_name:$("#pro_name").val(),
+					pro_desc:$("#pro_desc").val(),
+					pro_price:$("#pro_price").val(),
+					pro_create:resultTime
+				},
+				dataType:"json",
+				success:function(data){
+					mylayer.closeLoading();
+					console.log(data);
+					if(data.retcode==="0"){
+						mylayer.showCallBackMessage(data.data,function(){
+							window.location.href  = "indexAjaxTable.html";
+						});
+					}else{
+						mylayer.showMessage(data.data);
+					}
+				},
+				error:function(xhr,error,status){
+					mylayer.closeLoading();
+					console.log(error);
+					mylayer.showMessage(error);
+				}
+			});
+			return false;
+		});
+	</script>
+</body>
+</html>

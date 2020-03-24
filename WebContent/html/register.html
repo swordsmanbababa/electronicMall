@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Document</title>
+  <link rel="stylesheet" type="text/css" href="../res/static/css/main.css">
+  <link rel="stylesheet" type="text/css" href="../res/layui/css/layui.css">
+  <style type="text/css">
+        .myhide {
+            display: none;
+        }
+        #captcha2{
+            width:400px;
+        	float:left;
+        	margin-right:10px;
+        }
+        .refresh{
+        	float:left;
+        }
+</style>
+  <script type="text/javascript" src="../res/layui/layui.js"></script>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=0">
+  <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1">
+</head>
+<body>
+
+  <div class="site-nav-bg">
+    <div class="site-nav w1200">
+      <p class="sn-back-home">
+        <i class="layui-icon layui-icon-home"></i>
+        <a href="#">首页</a>
+      </p>
+      <div class="sn-quick-menu">
+        <div class="login"><a href="login.html">登录</a></div>
+        <div class="sp-cart"><a href="shopcart.html">购物车</a><span>2</span></div>
+      </div>
+    </div>
+  </div>
+
+
+
+  <div class="header">
+    <div class="headerLayout w1200">
+      <div class="headerCon">
+        <h1 class="mallLogo">
+          <a href="#" title="母婴商城">
+            <img src="../res/static/img/logo.png">
+          </a>
+        </h1>
+        <div class="mallSearch">
+          <form action="" class="layui-form" novalidate>
+            <input type="text" name="title" required  lay-verify="required" autocomplete="off" class="layui-input" placeholder="请输入需要的商品">
+            <button class="layui-btn" lay-submit lay-filter="formDemo">
+                <i class="layui-icon layui-icon-search"></i>
+            </button>
+            <input type="hidden" name="" value="">
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+  <div class="content content-nav-base  login-content">
+    <div class="main-nav">
+      <div class="inner-cont0">
+        <div class="inner-cont1 w1200">
+          <div class="inner-cont2">
+            <a href="commodity.html" class="active">所有商品</a>
+            <a href="buytoday.html">今日团购</a>
+            <a href="information.html">母婴资讯</a>
+            <a href="about.html">关于我们</a>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="login-bg">
+      <div class="login-cont w1200">
+        <div class="form-box">
+          <form class="layui-form" action="">
+            <legend>注册</legend>
+            <div class="layui-form-item">
+              <label class="layui-form-label">用户名</label>
+              <div class="layui-input-block">
+                <input type="text" id="name" name="username" lay-verify="required" placeholder="请输入用户名" autocomplete="off" class="layui-input">
+              </div>
+            </div>
+            <div class="layui-form-item">
+              <label class="layui-form-label">密码</label>
+              <div class="layui-input-block">
+                <input type="password" id="password" name="password" lay-verify="required" placeholder="请输入密码" autocomplete="off" class="layui-input">
+              </div>
+            </div>
+            <div class="form-group">
+				<div style="overflow:hidden">
+					<div id="captcha2">
+						<p id="wait2" >正在加载验证码......</p>
+					</div>
+					<div class="refresh">
+						<!-- <button id="refreshBtn" class="btn btn-default">刷新</button> -->
+					</div>
+				</div>
+				<br>
+				<p id="notice2" class="myhide">请先完成验证</p>
+			</div>
+            <div class="layui-form-item login-btn">
+              <div class="layui-input-block">
+                <button class="layui-btn" type="submit" id="btnSubmit" lay-submit="" lay-filter="demo1" >注册</button>
+              </div>
+            </div>
+          </form>
+
+          <!--<form class="layui-form" action="">-->
+            <!--<legend>登录</legend>-->
+            <!--<div class="layui-form-item">-->
+              <!--<div class="layui-inline iphone">-->
+                <!--<div class="layui-input-inline">-->
+                  <!--<i class="layui-icon layui-icon-cellphone iphone-icon"></i>-->
+                  <!--<input type="tel" name="phone" id="phone" lay-verify="required|phone" placeholder="请输入手机号" autocomplete="off" class="layui-input">-->
+                <!--</div>-->
+              <!--</div>-->
+              <!--<div class="layui-inline veri-code">-->
+                <!--<div class="layui-input-inline">-->
+                  <!--<input id="pnum" type="text" name="pnum" lay-verify="required" placeholder="请输入验证码" autocomplete="off" class="layui-input">-->
+                  <!--<input type="button" class="layui-btn" id="find"  value="验证码" />-->
+                <!--</div>-->
+              <!--</div>-->
+            <!--</div>-->
+            <!--<div class="layui-form-item login-btn">-->
+              <!--<div class="layui-input-block">-->
+                <!--<button class="layui-btn" lay-submit="" lay-filter="demo1" onclick="return false">登录</button>-->
+              <!--</div>-->
+            <!--</div>-->
+          <!--</form>-->
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="footer">
+    <div class="ng-promise-box">
+      <div class="ng-promise w1200">
+        <p class="text">
+          <a class="icon1" href="javascript:;">7天无理由退换货</a>
+          <a class="icon2" href="javascript:;">满99元全场免邮</a>
+          <a class="icon3" style="margin-right: 0" href="javascript:;">100%品质保证</a>
+        </p>
+      </div>
+    </div>
+    <div class="mod_help w1200">                                     
+      <p>
+        <a href="javascript:;">关于我们</a>
+        <span>|</span>
+        <a href="javascript:;">帮助中心</a>
+        <span>|</span>
+        <a href="javascript:;">售后服务</a>
+        <span>|</span>
+        <a href="javascript:;">母婴资讯</a>
+        <span>|</span>
+        <a href="javascript:;">关于货源</a>
+      </p>
+      <p class="coty">母婴商城版权所有 &copy; 2012-2020</p>
+    </div>
+  </div>
+
+  <!--<script src="../gVerify.js"></script>-->
+  <!--<script>-->
+    <!--var verifyCode = new GVerify("v_container");-->
+    <!--document.getElementById("my_button").onclick = function(){-->
+      <!--var res = verifyCode.validate(document.getElementById("code_input").value);-->
+      <!--if(res){-->
+        <!--alert("验证正确");-->
+      <!--}else{-->
+        <!--alert("验证码错误");-->
+      <!--}-->
+    <!--}-->
+  <!--</script>-->
+  	<script type="text/javascript" src="../js/jquery-2.2.4.js"></script>
+	<script type="text/javascript" src="../js/layer.js"></script>
+	<script type="text/javascript" src="../js/mylayer.js"></script>
+	<script type="text/javascript" src="../js/cookie.js"></script>
+	<script type="text/javascript" src="../js/gt.js"></script>
+	<script type="text/javascript">
+	 var handler2 = function (captchaObj) {
+	         $("#btnSubmit").click(function (e) {
+	            var result = captchaObj.getValidate();
+	            if (!result) {
+	            	//验证失败  显示提示框  
+	                $("#notice2").show();
+	                setTimeout(function () {
+	                	// 2秒后提示框 消失
+	                    $("#notice2").hide();
+	                }, 2000);
+	            } else {
+	            	// 第三方验证成功了  走登录的逻辑代码
+	            	// 服务器在验证
+	            	 $.ajax({
+	     	  	        url: "../addUserJSON",
+	     	  	        type: "post",
+	     	  	        dataType: "json",
+	     	  	        data:{
+	     	  	     	u_name: $('#name').val(),
+                        u_password: $('#password').val(),
+	     	  	        },
+	     	  	        success: function (data) {	     	  	 
+	     	  	      	  cookie.set("username",$('#name').val());
+                      	  cookie.set("userid",$('#password').val());
+	     	  	          window.location.href="index.html";
+	     	  	        }
+	     	  	    }); 
+	            }
+	            e.preventDefault();
+	        }); 
+	        console.log(captchaObj);
+	        // 将验证码加到id为captcha的元素里，同时会有三个input的值用于表单提交
+	        captchaObj.appendTo("#captcha2");
+	        captchaObj.onReady(function () {
+	            $("#wait2").hide();
+	        });
+	        captchaObj.onSuccess(function () {
+	        	console.log("success");
+	            var result = captchaObj.getValidate();
+	            if(result){
+	            	isExistCode = true;
+	            }else{
+	            	isExistCode = false;
+	            }
+	        });
+	        // 更多接口参考：http://www.geetest.com/install/sections/idx-client-sdk.html
+	    };
+	    //请求到验证信息的
+	    getCheckCode();
+	    function getCheckCode(){
+	    	  $.ajax({
+	  	        url: "../gt/register2?t=" + (new Date()).getTime(), // 加随机数防止缓存
+	  	        type: "get",
+	  	        dataType: "json",
+	  	        success: function (data) {
+	  	            // 调用 initGeetest 初始化参数
+	  	            // 参数1：配置参数
+	  	            // 参数2：回调，回调的第一个参数验证码对象，之后可以使用它调用相应的接口
+	  	            initGeetest({
+	  	                gt: data.gt,
+	  	                challenge: data.challenge,
+	  	                new_captcha: data.new_captcha, // 用于宕机时表示是新验证码的宕机
+	  	                offline: !data.success, // 表示用户后台检测极验服务器是否宕机，一般不需要关注
+	  	                product: "popup", // 产品形式，包括：float，popup
+	  	                width: "100%"
+	  	                // 更多配置参数请参见：http://www.geetest.com/install/sections/idx-client-sdk.html#config
+	  	            }, handler2);
+	  	        }
+	  	    }); 
+	    }
+	   
+	</script>
+  <script type="text/javascript">
+   layui.config({
+      base: '../res/static/js/util' //你存放新模块的目录，注意，不是layui的模块目录
+    }).use(['jquery','form'],function(){
+          var $ = layui.$,form = layui.form;
+
+
+        $("#find").click(function() {
+            if(!/^1\d{10}$/.test($("#phone").val())){
+              layer.msg("请输入正确的手机号");
+              return false;
+            }
+            var obj=this;
+            $.ajax({
+                type:"get",
+                url:"../json/login.json",
+                dataType:"json",//返回的
+                success:function(data) {
+                    
+                    if(data.result){
+                        $("#find").addClass(" layui-btn-disabled");
+                        $('#find').attr('disabled',"true");
+                        settime(obj);
+                        $("#msg").text(data.msg);
+                    }else{
+                        layer.msg(data.msg);
+                    }
+                },
+                error:function(msg) {
+                    console.log(msg);
+                }
+            }); 
+        })
+        var countdown=60; 
+        function settime(obj) { 
+        if (countdown == 0) { 
+            obj.removeAttribute("disabled"); 
+            obj.classList.remove("layui-btn-disabled")
+            obj.value="获取验证码"; 
+            countdown = 60; 
+            return;
+        } else { 
+            
+            obj.value="重新发送(" + countdown + ")"; 
+            countdown--; 
+        } 
+        setTimeout(function() { 
+            settime(obj) }
+            ,1000) 
+        }
+    })
+  </script>
+
+</body>
+</html>

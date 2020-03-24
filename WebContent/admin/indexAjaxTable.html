@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>后台商品的主页</title>
+<link href="../css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+	<div class="container">
+		<h1>商品后台管理的主界面</h1>
+		<div class="text-right">
+			<span  id="currentUser"></span> 
+			<a class="btn btn-info" onclick="UserExit()">退出</a>
+		
+		</div>
+		<div class="text-right">
+			<a class="btn btn-default" href="addProduct.html">添加商品</a>
+		</div>
+		<div>
+			<table class="table table-bordered" id="content">
+				<tr>
+					<th>商品id</th>
+					<th>商品名称</th>
+					<th>商品价格</th>
+					<th>商品描述</th>
+					<th>添加时间</th>
+					<th>商品操作</th>
+				</tr>
+				<tr>
+				</tr>
+			</table>
+		</div>
+	</div>
+	<script type="text/javascript" src="../js/jquery-2.2.4.js"></script>
+	<script type="text/javascript" src="../js/layer.js"></script>
+	<script type="text/javascript" src="../js/mylayer.js"></script>
+	<script type="text/javascript" src="../js/cookie.js"></script>
+	<script type="text/javascript">
+	     /*window.onload = function(){
+	    	 
+	     } */
+	     //用户退出
+	     function UserExit(){
+	    	 layer.confirm('确定是否要退出', {
+	    		  btn: ['确定','取消'] //按钮
+	    		}, function(){
+	    			console.log("ok");
+	    		  //layer.msg('的确很重要', {icon: 1});
+	    		  //开始Loading
+	    		  //mylayer.showLoading("玩命加载中...");
+	    		  cookie.deleteCookie("username");
+	    		  window.location.href = "loginThirdCode.html";
+	    		}, function(){
+	    		    console.log("fail");
+	    		});
+	     }
+	     
+	     //JQuery加载完毕后 默认执行的第一个方法
+	     $(function(){
+	    	 //开始判断用户是否登录  如果没有登录  则跳转到登录的后台页面   提示用户开始登录
+	    	 //如果已经登录 则请求商品的信息
+	    	 var currentUser = cookie.get("username");
+	    	 if(currentUser!=null&&currentUser!=""&&currentUser!=undefined){
+	    		 $("#currentUser").html(currentUser);
+	    		 getProductIndex();
+	    	 }else {
+	    		 window.location.href = "loginThirdCode.html";
+	    	 }   	 
+	     });
+	     
+	     function getProductIndex(){
+	    	 $.ajax({
+	    		 type:"GET",
+	    		 url:"../selectProductJSON",
+	    		 dataType:"json",
+	    		 success:function(data){
+	    			    console.log(data);
+	    			    if(data.retcode==="0"){
+	    			    	var content = $("#content");
+							for(var i=0;i<data.data.length;i++){
+								var tr = $("<tr>");
+								var pro_id_td = $("<td>"+data.data[i].pro_id+"</td>"); 
+								tr.append(pro_id_td);
+								
+								var pro_id_name = $("<td>"+data.data[i].pro_name+"</td>"); 
+								tr.append(pro_id_name);
+								
+								var pro_id_price = $("<td>"+data.data[i].pro_price+"</td>"); 
+								tr.append(pro_id_price);
+								
+								var pro_id_desc = $("<td>"+data.data[i].pro_desc+"</td>"); 
+								tr.append(pro_id_desc);
+								
+								var pro_td_create = $("<td>"+data.data[i].pro_create+"</td>")
+								tr.append(pro_td_create);
+								
+								var editBtn = $("<a href='editProduct.html?pro_id="+data.data[i].pro_id+"'>编辑</a>");
+								var span = $("<span>&nbsp;&nbsp</span>");
+								var deleteBtn = $("<a href='javascipt:void(0)' onclick='deleteBtn("+data.data[i].pro_id+")'>删除</a>");
+								
+								var operate_td = $("<td>");
+								
+								operate_td.append(editBtn);
+								operate_td.append(span);
+								operate_td.append(deleteBtn);
+								
+								tr.append(operate_td);
+								
+								content.append(tr);	
+							}
+	    			    }else{	
+	    			    	var ii = layer.open({
+					    		  type: 1, //Page层类型
+					    		  title:false,
+					    		  area: ['150px', '50px'],
+					    		  closeBtn: 0,
+					    		  shadeClose: true,
+					    		  shade: 0.6, //遮罩透明度
+					    		  content: "<p style='text-align:center;line-height:30px'>"+data.data+"</p>"
+					    	}); 
+	    			    }
+	    		 },
+	    		 error:function(xhr,status,error){
+	    			 console.log(error);
+	    			 console.log(status);
+	    			 var ii = layer.open({
+			    		  type: 1, //Page层类型
+			    		  title:false,
+			    		  area: ['150px', '50px'],
+			    		  closeBtn: 0,
+			    		  shadeClose: true,
+			    		  shade: 0.6, //遮罩透明度
+			    		  content: "<p style='text-align:center;color:red;line-height:30px'>"+status+"</p>"
+			    	}); 
+	    		 }
+	    	 })
+	     }
+	     
+	     
+	     function deleteBtn(pro_id){
+	    	 //console.log(pro_id);
+	    	 // confirm 问下用户是否确定删除
+	    	 layer.confirm('确定是否要删除该商品', {
+	    		  btn: ['确定','取消'] //按钮
+	    		}, function(){
+	    			console.log("ok");
+	    		  //layer.msg('的确很重要', {icon: 1});
+	    		  //开始Loading
+	    		  mylayer.showLoading("玩命加载中...");
+	    		    $.ajax({
+	    		    	type:"POST",
+	    		    	url:"deleteProductJSON",
+	    		    	data:{
+	    		    		pro_id:pro_id
+	    		    	},
+	    		    	dataType:"json",
+	    		    	success:function(data){
+	    		    		mylayer.closeLoading();
+	    		    		console.log(data);
+	    		    		if(data.retcode==="0"){
+	    		    			mylayer.showCallBackMessage(data.data,function(){
+	    							window.location.href  = "indexAjaxTable.html";
+	    						});
+	    		    		}else{
+	    		    			mylayer.showMessage(data.data);
+	    		    		}
+	    		    	},
+	    		    	error:function(xhr,error,status){
+	    		    		mylayer.closeLoading();
+	    		    		console.log(error);
+	    		    		mylayer.showMessage(error);
+	    		    	}
+	    		    })
+	    		}, function(){
+	    		    console.log("fail");
+	    		});
+	     }
+	</script>
+</body>
+</html>

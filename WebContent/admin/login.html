@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+<link href="./css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+	<div class="container" style="width:500px">
+		<h1 align="center">用户登录</h1>
+		<div class="text-right">
+			<a class="btn btn-info" href="regist.html">注册</a>
+		</div>
+		<form>
+			<div class="form-group">
+				<label for="name">用户名</label> <input type="text"
+					class="form-control" id="name" placeholder="用户名">
+			</div>
+			<div class="form-group">
+				<label for="password">密码</label> <input type="password"
+					class="form-control" id="password" placeholder="密码">
+			</div>
+			<div class="form-group">
+				<label for="checkcode">验证码</label><br>
+				<input type="text" style="width:300px;display:inline-block"
+					class="form-control" id="checkcode" placeholder="请输入验证码">
+				<span>&nbsp;&nbsp;</span>
+				<img src="./checkImg" onclick="changeImage(this)">
+				<span id="errorInfo"></span>
+			</div>
+			<div style="text-align:center">
+				<button  type="submit" style="width:100px" id="btnSubmit" class="btn btn-default" >登录</button>
+			</div>
+		</form>
+	</div>
+	<script type="text/javascript" src="js/jquery-2.2.4.js"></script>
+	<script type="text/javascript">
+		$(function(){
+			$("#btnSubmit").prop("disabled","disabled");
+		});
+		
+		var isExistName = false;
+		var isExistPassword = false;
+		var isExistCode = false;
+		//验证按钮是否 可以点击了  
+		function checkLoginBtnIsEnable(){
+			if(isExistName==true&&isExistPassword==true&&isExistCode==true){
+				$("#btnSubmit").prop("disabled","");
+			}else{
+				$("#btnSubmit").prop("disabled","disabled");
+			}
+		}
+		
+		//监听姓名输入
+		$("#name").bind("input propertychange",function(){
+			if($(this).val()!=''){
+				isExistName = true;
+			}else {
+				isExistName = false;
+			}
+			checkLoginBtnIsEnable();
+		});
+		//监听密码输入
+		$("#password").bind("input propertychange",function(){
+			if($(this).val()!=''){
+				isExistPassword = true;
+			}else {
+				isExistPassword = false;
+			}
+			checkLoginBtnIsEnable();
+		});
+		
+		
+		
+		function changeImage(obj){
+			//console.log(obj);
+			//将普通的DOM对象包装成为 JQuery的对象
+			$(obj).attr("src","./checkImg?time="+(new Date()).getTime());
+			//等图片验证码 加载成功  然后才开始走验证  不是同时进行  有步骤  第一步 先更换验证码  第二步 在验证验证码 
+			//不是同时进行的
+			//调用下面的验证码事件   在调用一次就可以判断验证码是否验证正确的
+			$(obj).load(function(){
+				console.log($("#checkcode").val());
+				requestCheckCode($("#checkcode").val());
+			});
+		}
+		
+		//监听验证码
+		$("#checkcode").bind("input propertychange",function(){
+			//console.log($(this).val());
+			//发送请求给服务器  然后 判断验证是否成功或者失败
+			var code = $(this).val();
+			requestCheckCode(code);
+		});
+		
+		function requestCheckCode(code){
+			$.ajax({
+				type:"GET",
+				url:"./checkCode",
+				data:{
+					code:code
+				},
+				dataType:"json",
+				success:function(data){
+					console.log(data);
+					if(data.retcode==="0"){
+						isExistCode = true;
+						$("#errorInfo").css({ "color": "green", "font-size": "25px" }).html("√");
+					}else{
+						isExistCode = false;
+						$("#errorInfo").css({ "color": "red", "font-size": "25px" }).html("×");
+					}
+					checkLoginBtnIsEnable();
+				},
+				error:function(xhr,error,status){
+					console.log(error);
+				}
+			})
+		}
+		
+	</script>
+</body>
+</html>

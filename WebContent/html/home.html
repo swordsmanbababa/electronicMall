@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Document</title>
+  <link rel="stylesheet" type="text/css" href="../res/static/css/main.css">
+  <link rel="stylesheet" type="text/css" href="../res/layui/css/layui.css">
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=0">
+  <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1">
+  <style>
+    .content{
+      height: 600px;
+      width: 1200px;
+      margin: 0 auto;
+      border-top: 1px solid #cfb1f7;
+      padding-top: 20px;
+    }
+    .layui-form-item{
+      margin-top: 30px;
+      width: 500px;
+    }
+    .content button {
+      width: 200px;
+      background: #cfb2f6;
+      font-size: 14px;
+    }
+    .footer{
+      padding-top: 20px;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="site-nav-bg">
+    <div class="site-nav w1200">
+      <p class="sn-back-home">
+        <i class="layui-icon layui-icon-home"></i>
+        <a href="#">首页</a>
+      </p>
+      <div class="sn-quick-menu">
+        <div class="login"><a href="login.html">登录</a></div>
+        <div class="sp-cart"><a href="shopcart.html">购物车</a><span>2</span></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="header">
+    <div class="headerLayout w1200">
+      <div class="headerCon">
+        <h1 class="mallLogo">
+          <a href="#" title="母婴商城">
+            <img src="../res/static/img/logo.png">
+          </a>
+        </h1>
+      </div>
+    </div>
+  </div>
+
+
+<div class="content">
+    <div class="layui-form-item">
+      <label class="layui-form-label" >姓名</label>
+      <div class="layui-input-block">
+        <input type="text" id="name" name="username" lay-verify="required" placeholder="请输入用户名" autocomplete="off" class="layui-input">
+      </div>
+    </div>
+    <div class="layui-form-item">
+      <label class="layui-form-label" >收货地址</label>
+      <div class="layui-input-block">
+        <input id="address"type="text" name="address" lay-verify="required" placeholder="请输入收货地址" autocomplete="off" class="layui-input">
+      </div>
+    </div>
+    <div class="layui-form-item">
+      <label class="layui-form-label" >电话</label>
+      <div class="layui-input-block">
+        <input type="text" name="phone" id="tel" lay-verify="required" placeholder="请输入电话" autocomplete="off" class="layui-input">
+      </div>
+    </div>
+    <div class="layui-form-item login-btn">
+      <div class="layui-input-block">
+        <button class="layui-btn" lay-submit="" lay-filter="demo1" id='submitinfo'>确认</button>
+      </div>
+    </div>
+</div>
+
+
+  <div class="footer">
+    <div class="mod_help w1200">
+      <p>
+        <a href="javascript:;">关于我们</a>
+        <span>|</span>
+        <a href="javascript:;">帮助中心</a>
+        <span>|</span>
+        <a href="javascript:;">售后服务</a>
+        <span>|</span>
+        <a href="javascript:;">母婴资讯</a>
+        <span>|</span>
+        <a href="javascript:;">关于货源</a>
+      </p>
+      <p class="coty">母婴商城版权所有 &copy; 2012-2020</p>
+    </div>
+  </div>
+	<script type="text/javascript" src="../js/jquery-2.2.4.js"></script>
+    <script type="text/javascript" src="../js/layer.js"></script>
+    <!-- <script type="text/javascript" src="../js/mylayer.js"></script> -->
+    <script type="text/javascript" src="../js/cookie.js"></script>
+  <script type="text/javascript">
+$("#submitinfo").click(function(){
+	localStorage.removeItem("info");
+	if($("#name").val()==''){
+		layer.msg("请填写用户名");
+		return;
+	}
+	if($("#tel").val()==''){
+		layer.msg("请填写电话");
+		return;
+	}
+	if($("#address").val()==''){
+		layer.msg("请填写地址信息");
+		return;
+	}
+	var data={
+			o_name:$("#name").val(),
+			o_address:$("#address").val(),
+			o_tel:$("#tel").val()
+	};
+	localStorage.setItem("info",JSON.stringify(data));
+	window.location.href="shopcart.html"
+});
+</script>
+</body>
+
+</html>

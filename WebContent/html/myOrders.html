@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>我的订单页面</title>
+<link href="../css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+	<div class="container" style="text-align:center">
+		<h1>我的订单页面</h1>
+		<nav class="navbar navbar-default">
+			<div class="container-fluid">
+				<!-- Collect the nav links, forms, and other content for toggling -->
+				<div class="collapse navbar-collapse"
+					id="bs-example-navbar-collapse-1">
+					<ul class="nav navbar-nav" id="category">
+					</ul>
+					<ul class="nav navbar-nav navbar-left"
+						style="margin-left: 10px; line-height: 50px">
+						<li><a href="indexHome.html">首页</a></li>
+					</ul>
+				</div>
+				<!-- /.navbar-collapse -->
+			</div>
+			<!-- /.container-fluid -->
+		</nav>
+		<!-- 显示订单和订单项 -->
+		<div class="row">
+			<div style="margin: 0 auto; margin-top: 10px; width: 950px;">
+				<table class="table table-bordered" id="content">						
+				<!-- 		<tbody>
+							<tr class="success">
+								<th colspan="5">订单编号:${order.oid }</th>
+							</tr>
+							<tr class="warning">
+								<th>图片</th>
+								<th>商品</th>
+								<th>价格</th>
+								<th>数量</th>
+								<th>小计</th>
+							</tr>
+								<tr class="active">
+									<td width="40%">
+										<img src="${pageContext.request.contextPath }/${orderItem.product.pimage}" width="70"
+										height="60">
+									</td>
+									<td width="30%"><a target="_blank"> ${orderItem.product.pname}</a></td>
+									<td width="20%">￥${orderItem.product.shop_price}</td>
+									<td width="10%">${orderItem.count }</td>
+									<td width="15%"><span class="subtotal">￥${orderItem.subtotal }</span></td>
+								</tr>
+								<tr class="active">
+									<td width="40%">
+										<img src="${pageContext.request.contextPath }/${orderItem.product.pimage}" width="70"
+										height="60">
+									</td>
+									<td width="30%"><a target="_blank"> ${orderItem.product.pname}</a></td>
+									<td width="20%">￥${orderItem.product.shop_price}</td>
+									<td width="10%">${orderItem.count }</td>
+									<td width="15%"><span class="subtotal">￥${orderItem.subtotal }</span></td>
+								</tr>
+						</tbody>
+						<tbody>
+							<tr>
+									<td width="40%"></td>
+									<td width="30%"></td>
+									<td width="20%"></td>
+									<td width="10%"></td>
+									<td width="15%">
+										<a href="#" class="btn  btn-danger btn-lg"> ${order.state==0?"未付款":"已付款"} </a>
+									</td>
+							<tr>
+						</tbody>
+ 					-->				
+ 				</table>
+			</div>
+		</div>
+		<div style="text-align: center;">
+			<ul class="pagination">
+				<li class="disabled"><a href="#" aria-label="Previous"><span
+						aria-hidden="true">&laquo;</span></a></li>
+				<li class="active"><a href="#">1</a></li>
+				<li><a href="#">2</a></li>
+				<li><a href="#">3</a></li>
+				<li><a href="#">4</a></li>
+				<li><a href="#">5</a></li>
+				<li><a href="#">6</a></li>
+				<li><a href="#">7</a></li>
+				<li><a href="#">8</a></li>
+				<li><a href="#">9</a></li>
+				<li><a href="#" aria-label="Next"> <span aria-hidden="true">&raquo;</span>
+				</a></li>
+			</ul>
+		</div>
+	</div>
+	<script type="text/javascript" src="../js/jquery-2.2.4.js"></script>
+    <script type="text/javascript" src="../js/layer.js"></script>
+    <script type="text/javascript" src="../js/mylayer.js"></script>
+    <script type="text/javascript" src="../js/cookie.js"></script>
+    <script type="text/javascript">
+	    if(cookie.get("username")!=null&&cookie.get("username")!=""){
+			   console.log("用户已经登录了 可以查看我的订单");
+			   var start = 0;
+			   var length = 10;
+			   mylayer.showLoading("数据加载中");
+			   $.ajax({
+				   type:"POST",
+				   url:"../getUserOrders",
+				   data:{
+					   u_id:cookie.get("userid"),
+					   start:start,
+					   length:length
+				   },
+				   dataType:"json",
+				   success:function(data){
+					   console.log(data);
+					   mylayer.closeLoading();
+					   if(data.retcode==="0"){
+						   //将数据取出来  进行显示
+						   createOrderElement(data.data);
+					   }else{
+						   mylayer.showError(data.data);
+					   }
+				   },
+				   error:function(xhr,error,status){
+					   console.log(error);
+				   }
+			   })
+		}else{
+			//如果用户未登陆 则跳转到登录页面 然后调回我的订单页面
+			var callback = window.location.href;
+		    window.location.href = "login.html?callback="+callback;
+		}
+	    
+	    //进行界面的显示
+	    function createOrderElement(data){
+	    	console.log(data);
+	    	var content = $("#content");
+	    	//从里面拿数据显示
+	    	for(var i=0;i<data.length;i++){
+	    		var order = data[i];
+	    		var tbody = $("<tbody>");
+	    		var o_id_tr = $('<tr class="success">\
+								<th colspan="5">订单编号:'+order.o_id+'<span> 创建时间:'+order.o_ordertime+' </span></th>\
+							</tr>');
+	    		var title_tr = $('<tr class="warning">\
+								       <th>图片</th>\
+								       <th>商品</th>\
+								       <th>价格</th>\
+								       <th>数量</th>\
+								       <th>小计</th>\
+							      </tr>');
+	    		tbody.append(o_id_tr);
+	    		tbody.append(title_tr);
+	    		for(var j=0;j<order.orderItems.length;j++){
+	    			var orderItem = order.orderItems[j];
+	    			//console.log(orderItem);
+	    			var item_tr = $('<tr class="active">');
+	    			var item_td_img = $('<td width="30%">');
+	    			var image = $('<img src="../images/'+orderItem.product.pro_image+'" width="70" height="60">')
+	    			item_td_img.append(image);
+	    			item_tr.append(item_td_img);
+	    		    var item_td_name = $('<td width="30%"><a target="_blank">'+orderItem.product.pro_name+' </a></td>')	
+				 	item_tr.append(item_td_name);
+	    		    
+	    		    var item_price_td = $('<td width="20%">'+orderItem.product.pro_price+'</td>')
+				    item_tr.append(item_price_td);
+	    		    
+	    		    var item_count_td = $('<td width="10%">'+orderItem.o_count+'</td>')
+				    item_tr.append(item_count_td);
+				
+	    		    var item_subtotal_td = $('<td width="15%"><span class="subtotal">'+orderItem.o_subtotal+'</span></td>')
+				    item_tr.append(item_subtotal_td);
+	    		    tbody.append(item_tr);
+	    		}
+	    		var order_pay_tr = $('<tr>\
+									<td width="40%"></td>\
+									<td width="30%"></td>\
+									<td colspan="2" width="30%">总计:'+order.o_total+' </td>\
+									<td width="15%">\
+										<a href="#" '+(order.o_state==0?'class="btn btn-info"':'class="btn btn-danger" disabled')+'>'+(order.o_state==0?'付款':'已支付')+'</a>\
+									</td>\
+							<tr>');
+	    		tbody.append(order_pay_tr);
+	    		content.append(tbody);
+	    	}
+	    }
+    
+    
+    </script>
+	
+</body>
+</html>

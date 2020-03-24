@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>搜索页面</title>
+<link href="../css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+	<div class="container">
+		<h1 style="text-align:center">搜索结果页面</h1>
+		<div class="row" id="nocontent" style="display:none">
+			<h1 align="center" style="color:red">暂无此商品信息</h1>
+		</div>
+		<div class="row" id="content"></div>
+		<div class="row" id="bottom" style="display:none;color:red">
+			<h2 align="center">已经没有更多了</h2>
+		</div>
+	</div>
+	<script type="text/javascript" src="../js/jquery-2.2.4.js"></script>
+    <script type="text/javascript" src="../js/layer.js"></script>
+    <script type="text/javascript" src="../js/mylayer.js"></script>
+    <script type="text/javascript">
+        var start = 0;
+        var length = 8;
+    	//获取查询的参数  function
+    	console.log(mylayer.getQueryString("search"));
+    	var searchContent = mylayer.getQueryString("search");
+    	mylayer.showLoading("数据加载中");
+    	$.ajax({
+    		type:"GET",
+    		url:"../searchContent",
+    		data:{
+    			search:searchContent,
+    			start:start,
+    			length:length
+    		},
+    		dataType:"json",
+    		success:function(data){
+    			mylayer.closeLoading();
+    			console.log(data);
+    			if(data.retcode==="0"){
+    				$("#nocontent").hide();
+    				var content = $("#content");
+					for (var i = 0; i < data.data.length; i++) {
+						var product = data.data[i];
+						var img = $("<img src='../images/"+product.pro_image+"'/ style='width:180px;height:270px'>");
+						var h4 = $("<h4 style='height:38px;line-height:22px'>"
+								+ product.pro_name + "</h4>");
+						var price = $("<p >¥:" + product.pro_price
+								+ "</p>");
+						var div = $("<div class='col-md-3'>");
+						div.append(img);
+						div.append(h4);
+						div.append(price);
+						content.append(div);
+					}
+    			}else{
+    				$("#nocontent").show();
+    				mylayer.showError(data.data);
+    			}
+    		},
+    		error:function(xhr,error,status){
+    			console.log(error);
+    			mylayer.showError(error);
+    		}
+    	})
+    </script>
+</body>
+</html>
